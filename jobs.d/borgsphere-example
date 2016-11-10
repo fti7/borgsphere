@@ -1,0 +1,52 @@
+# Defaults are commented out
+# Uncomment and edit to override
+
+##############################
+# Backup
+## 
+BACKUP_ID="example"
+BACKUP_DIRS="/root"
+#BACKUP_EXCLUDE="--exclude-caches"
+
+BORG_REPOSITORY="/path/to/repo"
+BORG_PASSPHRASE="ResistanceIsFutile"
+
+#RETRIES_ON_ERROR=10
+#BORG_OPTS="--list --filter=AME --lock-wait=15 --compression lz4"
+#BORG_FILES_CACHE_TTL=2000
+
+##############################
+# Prune old Archives
+## 
+#BORG_PRUNE_ENABLED=false
+#BORG_PRUNE_OPTS="--keep-hourly=24 --keep-daily=7 --keep-weekly=4 --keep-monthly=12"
+
+
+##############################
+# Mail Notification
+##
+#MAIL_ENABLED=false
+#MAIL_FROM="collective@borg.cube"
+#MAIL_TO="queen@borg.cube"
+
+# Advanced
+#MAIL_SUBJECT_OK="OK | BorgBackup $CFG_NAME"
+#MAIL_SUBJECT_ERROR="ERROR | BorgBackup $CFG_NAME"
+#MAIL_SUBJECT_WARN="WARN | BorgBackup $CFG_NAME"
+#MAIL_SUBJECT_DEDUPSIZE=true
+
+
+##############################
+# Backup Hook Commands
+## 
+#HOOK_PRE=""
+#HOOK_POST_OK=""
+#HOOK_POST_ERROR=""
+
+##############################
+# Logging
+## 
+# Default
+#LOG_FILE="/tmp/borgsphere.$BACKUP_ID.$(date +'%Y-%m-%d-%H%M%S').log"
+# Alternative
+#LOG_FILE="/tmp/borgsphere.$BACKUP_ID.log"
