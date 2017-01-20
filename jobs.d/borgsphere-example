@@ -46,7 +46,7 @@ BORG_PASSPHRASE="ResistanceIsFutile"
 ##############################
 # Logging
 ## 
-# Default
-#LOG_FILE="/tmp/borgsphere.$BACKUP_ID.$(date +'%Y-%m-%d-%H%M%S').log"
+# Default - Do not comment
+LOG_FILE="/tmp/borgsphere.$BACKUP_ID.$(date +'%Y-%m-%d-%H%M%S').log"
 # Alternative
 #LOG_FILE="/tmp/borgsphere.$BACKUP_ID.log"
