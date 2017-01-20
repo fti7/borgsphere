@@ -42,6 +42,12 @@ send_mail()
    echo "OK"
 }
 
+matches() {
+   input="$1"
+   pattern="$2"
+   echo "$input" | grep -q "$pattern"
+}
+
 
 #
 # Main Code
@@ -201,7 +207,13 @@ do
         if [ $BORG_RC -lt 2 -a "$MAIL_SUBJECT_DEDUPSIZE" = "true" ]
         then
             DEDUP_SIZE=$(grep "This archive" $LOG_FILE | awk '{print $7, $8}')
-            SUBJ="$SUBJ - $DEDUP_SIZE"
+
+            # Hide if just Metadata
+            if ! matches "$DEDUP_SIZE" "kB"
+            then
+                SUBJ="$SUBJ - $DEDUP_SIZE"
+            fi
+
         fi
 
         # Send Mail
