@@ -38,7 +38,7 @@ send_mail()
       /bin/echo -e "$4\r\n" >> "$tmpfile"
    fi
    /usr/sbin/sendmail -t < "$tmpfile"
-   rm $tmpfile
+   [ $? -eq 0 ] && rm $tmpfile
    echo "OK"
 }
 
