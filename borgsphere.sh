@@ -156,6 +156,10 @@ do
         echo "" >> $LOG_FILE
     fi
 
+    echo "## List all Borg Archives in Repository" >> $LOG_FILE
+    borg list $BORG_REPOSITORY >> $LOG_FILE
+    echo "" >> $LOG_FILE
+
     # Post Hook
     if [ $BORG_RC -lt 2 ]
     then
@@ -181,10 +185,6 @@ do
         fi
 
     fi
-
-    echo "## List all Borg Archives in Repository" >> $LOG_FILE
-    borg list $BORG_REPOSITORY >> $LOG_FILE
-    echo "" >> $LOG_FILE
 
     if [ "$MAIL_ENABLED" = "true" ]
     then
