@@ -148,6 +148,15 @@ do
     done
     echo "" >> $LOG_FILE
 
+    # Prune old Archives
+    if [ "$BORG_PRUNE_ENABLED" = "true" -a $BORG_RC -lt 2 ]
+    then
+        echo "## Prune Repository with options: $BORG_PRUNE_OPTS" >> $LOG_FILE
+        borg prune -v --list $BORG_REPOSITORY --prefix "{hostname}-${BACKUP_ID}-" $BORG_PRUNE_OPTS >> $LOG_FILE 2>&1
+        echo "OK" >> $LOG_FILE
+        echo "" >> $LOG_FILE
+    fi
+
     # Post Hook
     if [ $BORG_RC -lt 2 ]
     then
@@ -172,16 +181,6 @@ do
             echo "" >> $LOG_FILE
         fi
 
-    fi
-
-
-    # Prune old Archives
-    if [ "$BORG_PRUNE_ENABLED" = "true" -a $BORG_RC -lt 2 ]
-    then
-        echo "## Prune Repository with options: $BORG_PRUNE_OPTS" >> $LOG_FILE
-        borg prune -v --list $BORG_REPOSITORY --prefix "{hostname}-${BACKUP_ID}-" $BORG_PRUNE_OPTS >> $LOG_FILE 2>&1
-        echo "OK" >> $LOG_FILE
-        echo "" >> $LOG_FILE
     fi
 
     echo "## List all Borg Archives in Repository" >> $LOG_FILE
