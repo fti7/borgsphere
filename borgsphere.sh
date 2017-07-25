@@ -69,7 +69,6 @@ do
     BACKUP_EXCLUDE="--exclude-caches"
 
     BORG_REPOSITORY="/path/to/repo"
-    BORG_PASSPHRASE="ResistanceIsFutile"
 
     RETRIES_ON_ERROR=10
     BORG_OPTS="--list --filter=AME --lock-wait=15 --compression lz4"
@@ -122,7 +121,7 @@ do
     fi
 
     # Backup
-    export BORG_PASSPHRASE
+    [ -e ${BORG_PASSPHRASE} ] && export BORG_PASSPHRASE
     export BORG_FILES_CACHE_TTL
     
     for i in `seq 1 $RETRIES_ON_ERROR`;
