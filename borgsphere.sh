@@ -26,16 +26,16 @@ PATH="/usr/local/bin:$PATH"
 send_mail()
 {
    local tmpfile="/tmp/sendmail-bc-$$.tmp"
-   /bin/echo -e "Subject: $1\r" > "$tmpfile"
-   /bin/echo -e "To: $2\r" >> "$tmpfile"
-   /bin/echo -e "From: $3\r" >> "$tmpfile"
-   /bin/echo -e "\r" >> "$tmpfile"
+   /usr/bin/printf "Subject: $1\n" > "$tmpfile"
+   /usr/bin/printf "To: $2\n" >> "$tmpfile"
+   /usr/bin/printf "From: $3\n" >> "$tmpfile"
+   /usr/bin/printf "\n" >> "$tmpfile"
    if [ -f "$4" ]
    then
       cat "$4" >> "$tmpfile"
-      /bin/echo -e "\r\n" >> "$tmpfile"
+      /usr/bin/printf "\n" >> "$tmpfile"
    else
-      /bin/echo -e "$4\r\n" >> "$tmpfile"
+      /usr/bin/printf "$4\n" >> "$tmpfile"
    fi
    /usr/sbin/sendmail -t < "$tmpfile"
    [ $? -eq 0 ] && rm $tmpfile
