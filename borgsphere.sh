@@ -25,7 +25,7 @@ PATH="/usr/local/bin:$PATH"
 
 send_mail()
 {
-   local tmpfile="/tmp/sendmail-bc-$$.tmp"
+   local tmpfile=$(/usr/bin/mktemp -t borgmail)
    /usr/bin/printf "Subject: $1\n" > "$tmpfile"
    /usr/bin/printf "To: $2\n" >> "$tmpfile"
    /usr/bin/printf "From: $3\n" >> "$tmpfile"
