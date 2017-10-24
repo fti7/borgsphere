@@ -206,7 +206,7 @@ do
         # Append Dedupsize?
         if [ $BORG_RC -lt 2 -a "$MAIL_SUBJECT_DEDUPSIZE" = "true" ]
         then
-            DEDUP_SIZE=$(grep "This archive" $LOG_FILE | awk '{print $7, $8}')
+            DEDUP_SIZE=$(grep "This archive" $LOG_FILE | head -n1 | awk '{print $7, $8}')
 
             # Hide if just Metadata
             if ! matches "$DEDUP_SIZE" "kB"
