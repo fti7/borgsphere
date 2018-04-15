@@ -25,20 +25,20 @@ PATH="/usr/local/bin:$PATH"
 
 send_mail()
 {
-   local tmpfile="/tmp/sendmail-bc-$$.tmp"
-   /bin/echo -e "Subject: $1\r" > "$tmpfile"
-   /bin/echo -e "To: $2\r" >> "$tmpfile"
-   /bin/echo -e "From: $3\r" >> "$tmpfile"
-   /bin/echo -e "\r" >> "$tmpfile"
+   local tmpfile=$(/usr/bin/mktemp -t borgmail)
+   /usr/bin/printf "Subject: $1\n" > "$tmpfile"
+   /usr/bin/printf "To: $2\n" >> "$tmpfile"
+   /usr/bin/printf "From: $3\n" >> "$tmpfile"
+   /usr/bin/printf "\n" >> "$tmpfile"
    if [ -f "$4" ]
    then
       cat "$4" >> "$tmpfile"
-      /bin/echo -e "\r\n" >> "$tmpfile"
+      /usr/bin/printf "\n" >> "$tmpfile"
    else
-      /bin/echo -e "$4\r\n" >> "$tmpfile"
+      /usr/bin/printf "$4\n" >> "$tmpfile"
    fi
    /usr/sbin/sendmail -t < "$tmpfile"
-   rm $tmpfile
+   [ $? -eq 0 ] && rm $tmpfile
    echo "OK"
 }
 
@@ -69,7 +69,6 @@ do
     BACKUP_EXCLUDE="--exclude-caches"
 
     BORG_REPOSITORY="/path/to/repo"
-    BORG_PASSPHRASE="ResistanceIsFutile"
 
     RETRIES_ON_ERROR=10
     BORG_OPTS="--list --filter=AME --lock-wait=15 --compression lz4"
@@ -122,7 +121,7 @@ do
     fi
 
     # Backup
-    export BORG_PASSPHRASE
+    [ -e ${BORG_PASSPHRASE} ] && export BORG_PASSPHRASE
     export BORG_FILES_CACHE_TTL
     
     for i in `seq 1 $RETRIES_ON_ERROR`;
@@ -146,6 +145,19 @@ do
         fi
 
     done
+    echo "" >> $LOG_FILE
+
+    # Prune old Archives
+    if [ "$BORG_PRUNE_ENABLED" = "true" -a $BORG_RC -lt 2 ]
+    then
+        echo "## Prune Repository with options: $BORG_PRUNE_OPTS" >> $LOG_FILE
+        borg prune -v --list $BORG_REPOSITORY --prefix "{hostname}-${BACKUP_ID}-" $BORG_PRUNE_OPTS >> $LOG_FILE 2>&1
+        echo "OK" >> $LOG_FILE
+        echo "" >> $LOG_FILE
+    fi
+
+    echo "## List all Borg Archives in Repository" >> $LOG_FILE
+    borg list $BORG_REPOSITORY >> $LOG_FILE
     echo "" >> $LOG_FILE
 
     # Post Hook
@@ -173,20 +185,6 @@ do
         fi
 
     fi
-
-
-    # Prune old Archives
-    if [ "$BORG_PRUNE_ENABLED" = "true" -a $BORG_RC -lt 2 ]
-    then
-        echo "## Prune Repository with options: $BORG_PRUNE_OPTS" >> $LOG_FILE
-        borg prune -v --list $BORG_REPOSITORY --prefix "{hostname}-${BACKUP_ID}-" $BORG_PRUNE_OPTS >> $LOG_FILE 2>&1
-        echo "OK" >> $LOG_FILE
-        echo "" >> $LOG_FILE
-    fi
-
-    echo "## List all Borg Archives in Repository" >> $LOG_FILE
-    borg list $BORG_REPOSITORY >> $LOG_FILE
-    echo "" >> $LOG_FILE
 
     if [ "$MAIL_ENABLED" = "true" ]
     then
