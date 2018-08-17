@@ -7,13 +7,13 @@
 # /__________/|/|
 # |"|_'='-]:+|/||
 # |-+-|.|_'-"||//
-# |[".[:!+-'=|//   borgsphere version 0.1.1
+# |[".[:!+-'=|//   borgsphere version 0.1.2
 # |='!+|-:]|-|/    https://github.com/fti7/borgsphere
 #  ----------     
 #
 #################
 
-BS_VERSION="0.1.1"
+BS_VERSION="0.1.2"
 
 # Prefer manual installed Version of Borg
 PATH="/usr/local/bin:$PATH"
@@ -25,19 +25,19 @@ PATH="/usr/local/bin:$PATH"
 
 send_mail()
 {
-   local tmpfile=$(/usr/bin/mktemp -t borgmail)
-   /usr/bin/printf "Subject: $1\n" > "$tmpfile"
-   /usr/bin/printf "To: $2\n" >> "$tmpfile"
-   /usr/bin/printf "From: $3\n" >> "$tmpfile"
-   /usr/bin/printf "\n" >> "$tmpfile"
+   local tmpfile=$(mktemp -t borgmail)
+   printf "Subject: $1\n" > "$tmpfile"
+   printf "To: $2\n" >> "$tmpfile"
+   printf "From: $3\n" >> "$tmpfile"
+   printf "\n" >> "$tmpfile"
    if [ -f "$4" ]
    then
       cat "$4" >> "$tmpfile"
-      /usr/bin/printf "\n" >> "$tmpfile"
+      printf "\n" >> "$tmpfile"
    else
-      /usr/bin/printf "$4\n" >> "$tmpfile"
+      printf "$4\n" >> "$tmpfile"
    fi
-   /usr/sbin/sendmail -t < "$tmpfile"
+   sendmail -t < "$tmpfile"
    [ $? -eq 0 ] && rm $tmpfile
    echo "OK"
 }
